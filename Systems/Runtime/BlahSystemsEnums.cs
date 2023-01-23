@@ -1,4 +1,4 @@
-﻿namespace BlahSignals
+﻿namespace BlahSignals.Systems
 {
 public enum EGroupSwitchMode
 {

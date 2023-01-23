@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using NUnit.Framework;
 
-namespace BlahSignals.Tests.Helpers
+namespace BlahSignals.Signals.Tests.Helpers
 {
 internal static class TestHelper
 {

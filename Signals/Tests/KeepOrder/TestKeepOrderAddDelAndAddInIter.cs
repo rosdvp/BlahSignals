@@ -1,7 +1,7 @@
-using BlahSignals.Tests.Helpers;
+using BlahSignals.Signals.Tests.Helpers;
 using NUnit.Framework;
 
-namespace BlahSignals.Tests.Signal.KeepOrder
+namespace BlahSignals.Signals.Tests.KeepOrder
 {
 public class TestKeepOrderDelAddInIter
 {

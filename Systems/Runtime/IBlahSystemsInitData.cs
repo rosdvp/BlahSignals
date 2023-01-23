@@ -1,6 +1,4 @@
-﻿using System.Collections.Generic;
-
-namespace BlahSignals
+﻿namespace BlahSignals.Systems
 {
 /// <summary>
 /// Implement this interface on a class you want to pass to <see cref="IBlahInitSystem.Init"/>.<br/>

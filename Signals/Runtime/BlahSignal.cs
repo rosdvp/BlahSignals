@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Runtime.CompilerServices;
-using UnityEngine;
 
-namespace BlahSignals
+namespace BlahSignals.Signals
 {
 public class BlahSignal<T> : IBlahSignalPool where T : struct
 {

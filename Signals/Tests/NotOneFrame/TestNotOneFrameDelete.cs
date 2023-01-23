@@ -1,7 +1,7 @@
-using BlahSignals.Tests.Helpers;
+using BlahSignals.Signals.Tests.Helpers;
 using NUnit.Framework;
 
-namespace BlahSignals.Tests.Signal.NotOneFrame
+namespace BlahSignals.Signals.Tests.NotOneFrame
 {
 public class TestNotOneFrameDelete
 {

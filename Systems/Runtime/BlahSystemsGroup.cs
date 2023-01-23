@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace BlahSignals
+namespace BlahSignals.Systems
 {
 public class BlahSystemsGroup
 {

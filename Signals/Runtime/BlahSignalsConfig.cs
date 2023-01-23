@@ -1,4 +1,4 @@
-﻿namespace BlahSignals
+﻿namespace BlahSignals.Signals
 {
 public class BlahSignalsConfig
 {
