@@ -10,13 +10,13 @@ namespace BlahSignals.AutoOrder.Editor
 {
 public static class BlahAutoOrderFileGenerator
 {
-	private const string UN_ORDERED_CONTAINER_TYPE_NAME = "EcsUnOrderedSystemsContainer";
+	private const string UN_ORDERED_CONTAINER_TYPE_NAME = "BlahUnOrderedSystemsContainer";
 	private const string UN_ORDERED_SYSTEMS_FIELD_NAME  = "SystemsToOrder";
 	private const string CODE_GEN_TEMPLATE_FIELD_NAME  = "CodeGenTemplate";
 	
-	private const string ORDERED_CONTAINER_TYPE_NAME = "EcsOrderedSystemsContainer";
+	private const string ORDERED_CONTAINER_TYPE_NAME = "BlahOrderedSystemsContainer";
 	
-	[MenuItem("Tools/EcsAutoOrder/Re-order systems")]
+	[MenuItem("Tools/Blah/Re-order systems")]
 	public static void EditorCreateFileWithOrderedSystems()
 	{
 		var unOrderedContainer = FindUnOrderedContainer();
@@ -38,7 +38,7 @@ public static class BlahAutoOrderFileGenerator
 		File.WriteAllLines(path, lines);
 		AssetDatabase.ImportAsset(path);
 
-		Debug.Log("EcsSystems re-ordered!");
+		Debug.Log("[Blah] systems re-ordered!");
 	}
 
 
