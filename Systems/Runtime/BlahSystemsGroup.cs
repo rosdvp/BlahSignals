@@ -5,6 +5,7 @@ namespace BlahSignals.Systems
 {
 public class BlahSystemsGroup
 {
+	private readonly HashSet<IBlahSystem>         _allSystems         = new();
 	private readonly List<IBlahInitSystem>        _initSystems        = new();
 	private readonly List<IBlahRunSystem>         _runSystems         = new();
 	private readonly List<IBlahResumePauseSystem> _resumePauseSystems = new();
@@ -13,12 +14,15 @@ public class BlahSystemsGroup
 	//-----------------------------------------------------------
 	private bool _isInited = false;
 	private bool _isPaused = true;
-	
+
+	public IReadOnlyCollection<IBlahSystem> GetAllSystems() => _allSystems;
+
 	public BlahSystemsGroup AddSystem(IBlahSystem system)
 	{
 		if (_isInited)
 			throw new Exception("Impossible to add system if systems of the group is already inited.");
 		
+		_allSystems.Add(system);
 		if (system is IBlahInitSystem initSystem)
 			_initSystems.Add(initSystem);
 		if (system is IBlahRunSystem runSystem)
