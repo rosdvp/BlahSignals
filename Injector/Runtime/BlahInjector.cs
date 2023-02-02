@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Reflection;
 
 namespace BlahSignals.Injector
@@ -18,6 +19,15 @@ public class BlahInjector
 
 	//-----------------------------------------------------------
 	//-----------------------------------------------------------
+	public void Inject(IReadOnlyCollection<object> targets)
+	{
+		if (targets == null)
+			throw new Exception($"{nameof(targets)} must not be null!");
+		
+		foreach (object target in targets)
+			Inject(target, target.GetType());
+	}
+	
 	public void Inject(object[] targets)
 	{
 		if (targets == null)
