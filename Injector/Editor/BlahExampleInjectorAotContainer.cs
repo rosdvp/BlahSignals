@@ -4,7 +4,7 @@ namespace BlahSignals.Injector.Editor
 {
 /// <summary>
 /// 1. Copy this class to any folder and rename it to "BlahInjectorAotContainer".<br/>
-/// 2. Uncomment line 14; but do not ever touch //START-CODEGEN and //END-CODEGEN lines!<br/>
+/// 2. Uncomment line 14; but do not ever touch START-CODEGEN and END-CODEGEN lines!<br/>
 /// 3. Press Tools/Blah/Generate Injector AOT, and this file will be updated.<br/>
 /// </summary>
 public class BlahExampleInjectorAotContainer

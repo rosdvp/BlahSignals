@@ -8,7 +8,7 @@ using UnityEngine;
 
 namespace BlahSignals.Injector.Editor
 {
-public class BlahInjectorFileGenerator
+public static class BlahInjectorAotGenerator
 {
 	private const string SIGNAL_INTERFACE_NAME        = "IBlahSignal";
 	private const string CONTAINER_CLASS_TYPE         = "BlahInjectorAotContainer";
@@ -21,7 +21,7 @@ public class BlahInjectorFileGenerator
 		string codeGenTemplate = ExtractCodeGenTemplate(containerType);
 		
 		var generatedLines  = new List<string>();
-		foreach (var signalName in FindAllSignalsNames())
+		foreach (string signalName in FindAllSignalsNames())
 			generatedLines.Add(codeGenTemplate.Replace("[SIGNAL_NAME]", signalName));
 
 		string path     = GetFilePath(CONTAINER_CLASS_TYPE);
@@ -67,7 +67,7 @@ public class BlahInjectorFileGenerator
 
 	private static string GetFilePath(string fileName)
 	{
-		var guids = AssetDatabase.FindAssets(fileName);
+		string[] guids = AssetDatabase.FindAssets(fileName);
 		if (guids == null || guids.Length == 0)
 			throw new Exception($"Failed to find path to {fileName}");
 		return AssetDatabase.GUIDToAssetPath(guids[0]);	
