@@ -3,11 +3,11 @@ using UnityEngine.Scripting;
 namespace BlahSignals.Injector.Editor
 {
 /// <summary>
-/// 1. Copy this class to any folder and rename it to "BlahInjectorAotContainer".
-/// 2. Uncomment line 14; but do not ever touch //START-CODEGEN and //END-CODEGEN lines!
-/// 3. Press Tools/Blah/Generate Injector AOT, and this file will be updated.
+/// 1. Copy this class to any folder and rename it to "BlahInjectorAotContainer".<br/>
+/// 2. Uncomment line 14; but do not ever touch //START-CODEGEN and //END-CODEGEN lines!<br/>
+/// 3. Press Tools/Blah/Generate Injector AOT, and this file will be updated.<br/>
 /// </summary>
-public class ExampleBlahInjectorAotContainer
+public class BlahExampleInjectorAotContainer
 {
 	[Preserve]
 	private void AOT()

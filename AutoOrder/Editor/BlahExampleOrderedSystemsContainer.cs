@@ -6,11 +6,11 @@ namespace BlahSignals.AutoOrder.Editor
 /// 3. Uncomment AddOrderedSystems method and modify parameter type.<br/>
 /// 3. In your Startup (or whatever you have to setup systems) call AddOrderedSystems
 /// method to Add systems in a correct order.<br/>
-/// 4. Follow instructions in <see cref="ExampleBlahUnOrderedSystemsContainer"/>.
+/// 4. Follow instructions in <see cref="BlahExampleUnOrderedSystemsContainer"/>.
 ///
 /// DO NOT remove START-CODEGEN and END-CODEGEN comments!!!
 /// </summary>
-public static class ExampleBlahOrderedSystemsContainer
+public static class BlahExampleOrderedSystemsContainer
 {
 	/*
 	public static void AddOrderedSystems(BlahSystemsGroup systems)

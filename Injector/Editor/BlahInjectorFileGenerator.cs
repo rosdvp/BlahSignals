@@ -24,11 +24,10 @@ public class BlahInjectorFileGenerator
 		foreach (var signalName in FindAllSignalsNames())
 			generatedLines.Add(codeGenTemplate.Replace("[SIGNAL_NAME]", signalName));
 
-
 		string path     = GetFilePath(CONTAINER_CLASS_TYPE);
-		var lines    = File.ReadAllLines(path).ToList();
-		int startIdx = lines.FindIndex(s => s.Contains("//START-CODEGEN"));
-		int endIdx   = lines.FindIndex(s => s.Contains("//END-CODEGEN"));
+		var    lines    = File.ReadAllLines(path).ToList();
+		int    startIdx = lines.FindIndex(s => s.Contains("//START-CODEGEN"));
+		int    endIdx   = lines.FindIndex(s => s.Contains("//END-CODEGEN"));
 		lines.RemoveRange(startIdx + 1, endIdx - startIdx - 1);
 		lines.InsertRange(startIdx + 1, generatedLines);
 		File.WriteAllLines(path, lines);
@@ -42,10 +41,8 @@ public class BlahInjectorFileGenerator
 	{
 		foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
 		foreach (var type in assembly.ExportedTypes)
-		{
 			if (type.Name == CONTAINER_CLASS_TYPE)
 				return type;
-		}
 		throw new Exception($"Failed to find {CONTAINER_CLASS_TYPE} type");
 	}
 

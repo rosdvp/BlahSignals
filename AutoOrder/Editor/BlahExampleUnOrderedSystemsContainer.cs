@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace BlahSignals.AutoOrder.Editor
 {
 /// <summary>
-/// 1. Follow instructions in <see cref="ExampleBlahOrderedSystemsContainer"/>.<br/>
+/// 1. Follow instructions in <see cref="BlahExampleOrderedSystemsContainer"/>.<br/>
 /// 2. Copy this file in the same folder as "BlahUnOrderedSystemsContainer".<br/>
 /// 3. Change the class name and file name to BlahOrderedSystemsContainer (without Example).<br/>
 /// 4. Put all your systems in the list below.<br/>
@@ -12,7 +12,7 @@ namespace BlahSignals.AutoOrder.Editor
 /// This will re-generate "BlahOrderedSystemsContainer" with systems in correct order.<br/>
 /// </summary>
 #if UNITY_EDITOR
-public static class ExampleBlahUnOrderedSystemsContainer
+public static class BlahExampleUnOrderedSystemsContainer
 {
 	private static readonly List<Type> SystemsToOrder = new()
 	{
