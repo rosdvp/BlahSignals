@@ -86,6 +86,35 @@ public class BlahSignal<T> : IBlahSignalPool where T : struct
 		AddDelayedOp(_iterIdxInAlive, false);
 	}
 
+	/// <summary>
+	/// Removes all signals.
+	/// </summary>
+	public void DellAll()
+	{
+		if (_isIterating)
+			throw new Exception($"{nameof(DellAll)} is not allowed in foreach loop");
+		_poolCount     = 0;
+		_aliveCount    = 0;
+		_releasedCount = 0;
+	}
+	
+	/// <summary>
+	/// Removes all signals, but return <see cref="IsEmpty"/> at the moment before removing.
+	/// </summary>
+	public bool CheckIsEmptyAndDelAll()
+	{
+		if (_isIterating)
+			throw new Exception($"{nameof(CheckIsEmptyAndDelAll)} is not allowed in foreach loop");
+		bool isEmpty = _aliveCount == 0;
+		_poolCount     = 0;
+		_aliveCount    = 0;
+		_releasedCount = 0;
+		return isEmpty;
+	}
+	
+	/// <summary>
+	/// Returns any signal in pool.
+	/// </summary>
 	public ref T GetAny()
 	{
 		if (_aliveCount == 0)

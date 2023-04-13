@@ -23,6 +23,7 @@ internal static class TestHelper
 	{
 		var values = new List<int>(expectedValues);
 
+		Assert.AreEqual(expectedValues.Length == 0, signal.IsEmpty);
 		Assert.AreEqual(expectedValues.Length, signal.Count);
 		var iterCount = 0;
 		foreach (ref var ev in signal)
