@@ -24,10 +24,11 @@ public class BlahSignalsContext
 		if (_map.TryGetValue(type, out var cachedSignal))
 			return (BlahSignal<T>)cachedSignal;
 
-		bool isOneFrame  = type.GetInterface(nameof(IBlaNotOneFrame)) == null;
-		bool isKeepOrder = type.GetInterface(nameof(IBlahKeepOrder)) != null;
-		
-		var signal     = new BlahSignal<T>(_config, isOneFrame, isKeepOrder);
+		bool isOneFrame   = type.GetInterface(nameof(IBlahNotOneFrame)) == null;
+		bool isKeepOrder  = type.GetInterface(nameof(IBlahKeepOrder)) != null;
+		bool isResettable = type.GetInterface(nameof(IBlahResettable)) != null;
+
+		var signal = new BlahSignal<T>(_config, isOneFrame, isKeepOrder, isResettable);
 		_all.Add(signal);
 		_map[type] = signal;
 
@@ -35,7 +36,7 @@ public class BlahSignalsContext
 	}
 
 	/// <summary>
-	/// Delete all OneFrame signals (these signals do not have <see cref="IBlaNotOneFrame"/>).
+	/// Delete all OneFrame signals (these signals do not have <see cref="IBlahNotOneFrame"/>).
 	/// </summary>
 	public void OnFrameEnd()
 	{
@@ -62,17 +63,19 @@ internal interface IBlahSignalPool
 /// <summary>
 /// Mark that struct is a signal.
 /// All signals are OneFrame by default.
-/// Use <see cref="IBlaNotOneFrame"/> to make a signal not OneFrame.
+/// Use <see cref="IBlahNotOneFrame"/> to make a signal not OneFrame.
 /// </summary>
 public interface IBlahSignal { }
 /// <summary>
 /// Use with <see cref="IBlahSignal"/> only.
 /// Mark that the content of current frame should be removed after all systems Run loop
 /// </summary>
-public interface IBlaNotOneFrame { }
+public interface IBlahNotOneFrame { }
 /// <summary>
 /// Use with <see cref="IBlahSignal"/> only.
 /// Mark that the order of signals matter and should be kept
 /// </summary>
 public interface IBlahKeepOrder { }
+
+public interface IBlahResettable { }
 }

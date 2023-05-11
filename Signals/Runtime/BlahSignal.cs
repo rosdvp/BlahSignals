@@ -7,6 +7,7 @@ public class BlahSignal<T> : IBlahSignalPool where T : struct
 {
 	private readonly bool _isOneFrame;
 	private readonly bool _isKeepOrder;
+	private readonly bool _isResettable;
 	
 	private T[] _pool;
 	private int _poolCount;
@@ -26,10 +27,11 @@ public class BlahSignal<T> : IBlahSignalPool where T : struct
 	private bool _isIterating;
 	private int  _iterIdxInAlive;
 
-	public BlahSignal(BlahSignalsConfig config, bool isOneFrame, bool isKeepOrder)
+	public BlahSignal(BlahSignalsConfig config, bool isOneFrame, bool isKeepOrder, bool isResettable)
 	{
 		_isOneFrame    = isOneFrame;
 		_isKeepOrder   = isKeepOrder;
+		_isResettable  = isResettable;
 		_pool          = new T[config.PoolBaseCapacity];
 		_aliveIdxs     = new int[_pool.Length];
 		_releasedIdxs  = new int[_pool.Length];
@@ -61,6 +63,10 @@ public class BlahSignal<T> : IBlahSignalPool where T : struct
 			AddDelayedOp(idx, true);
 		else
 			_aliveIdxs[_aliveCount++] = idx;
+
+		if (_isResettable)
+			_pool[idx] = default;
+		
 		return ref _pool[idx];
 	}
 
@@ -73,6 +79,10 @@ public class BlahSignal<T> : IBlahSignalPool where T : struct
 		int idx = GetFreeIdxInPool();
 		ValidateCapacity(ref _nextFrameIdxs, _nextFrameCount);
 		_nextFrameIdxs[_nextFrameCount++] = idx;
+
+		if (_isResettable)
+			_pool[idx] = default;
+		
 		return ref _pool[idx];
 	}
 

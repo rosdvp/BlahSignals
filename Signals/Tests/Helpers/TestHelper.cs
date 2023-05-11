@@ -64,14 +64,14 @@ internal static class TestHelper
 		int IWithValue.Val => Value;
 	}
 
-	public struct NotOneFrameSignal : IWithValue, IBlahSignal, IBlaNotOneFrame
+	public struct NotOneFrameSignal : IWithValue, IBlahSignal, IBlahNotOneFrame
 	{
 		public int Value;
 		
 		int IWithValue.Val => Value;
 	}
 
-	public struct KeepOrderSignal : IWithValue, IBlahSignal, IBlaNotOneFrame, IBlahKeepOrder
+	public struct KeepOrderSignal : IWithValue, IBlahSignal, IBlahNotOneFrame, IBlahKeepOrder
 	{
 		public int     Value;
 		
