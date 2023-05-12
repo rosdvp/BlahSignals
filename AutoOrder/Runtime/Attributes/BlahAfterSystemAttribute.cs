@@ -3,7 +3,7 @@
 namespace BlahSignals.AutoOrder.Attributes
 {
 /// <summary>
-/// Mark that this System should go after another System
+/// Mark that this System should go after another System.
 /// </summary>
 [AttributeUsage(AttributeTargets.Class, AllowMultiple = true, Inherited = true)]
 public class BlahAfterSystemAttribute : Attribute

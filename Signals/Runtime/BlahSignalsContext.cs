@@ -77,5 +77,9 @@ public interface IBlahNotOneFrame { }
 /// </summary>
 public interface IBlahKeepOrder { }
 
+/// <summary>
+/// Use with <see cref="IBlahSignal"/> only.
+/// Mark that data of structure should be set to default on each <see cref="BlahSignal{T}.Add"/> call.
+/// </summary>
 public interface IBlahResettable { }
 }
