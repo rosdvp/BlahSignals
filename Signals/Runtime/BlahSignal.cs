@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Collections;
+using System.Collections.Generic;
 using System.Runtime.CompilerServices;
 
 namespace BlahSignals.Signals
@@ -137,6 +139,7 @@ public class BlahSignal<T> : IBlahSignalPool where T : struct
 
 	/// <summary>
 	/// Use this method if you need a specific order in foreach loop.<br/>
+	/// Very slow.<br/>
 	/// Does not affect nextFrame signals.
 	/// </summary>
 	/// <param name="comp">
@@ -149,10 +152,11 @@ public class BlahSignal<T> : IBlahSignalPool where T : struct
 	{
 		if (_iteratorsGoingCount > 0)
 			throw new Exception("Sorting during foreach loop is not allowed");
-		Array.Sort(
-			_aliveIdxs,
-			(idxA, idxB) => comp.Invoke(_pool[idxA], _pool[idxB])
-		);
+
+		var sortedAliveIdxs = new int[_aliveCount];
+		Array.Copy(_aliveIdxs, sortedAliveIdxs, _aliveCount);
+		Array.Sort(sortedAliveIdxs, (idxA, idxB) => comp.Invoke(_pool[idxA], _pool[idxB]));
+		Array.Copy(sortedAliveIdxs, _aliveIdxs, _aliveCount);
 	}
 
 	//-----------------------------------------------------------
