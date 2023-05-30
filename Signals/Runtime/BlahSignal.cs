@@ -136,22 +136,23 @@ public class BlahSignal<T> : IBlahSignalPool where T : struct
 	}
 
 	/// <summary>
-	/// Returns ref to signal on which foreach iterator is now.
+	/// Use this method if you need a specific order in foreach loop.<br/>
+	/// Does not affect nextFrame signals.
 	/// </summary>
-	/// <param name="nestingLevel">
-	/// For nesting foreach loops on the same signal,
-	/// specify from which loop you want to get ref (where 0 is first loop).
+	/// <param name="comp">
+	/// Lambda should return:<br/>
+	/// -1 if first less second;<br/>
+	/// 0 if first equals second;<br/>
+	/// 1 if first greater second;<br/> 
 	/// </param>
-	public ref T GetCurrentInIteration(int nestingLevel = 0)
+	public void Sort(Comparison<T> comp)
 	{
-		if (_iteratorsGoingCount == 0)
-			throw new Exception($"{nameof(GetCurrentInIteration)} only works in foreach loop");
-		if (nestingLevel >= _iteratorsGoingCount)
-			throw new Exception($"Current max nesting level is {_iteratorsGoingCount}, " +
-			                    $"but {nestingLevel} is requested"
-			);
-
-		return ref _pool[_aliveIdxs[_iteratorsIdxInAliveByLevel[nestingLevel]]];
+		if (_iteratorsGoingCount > 0)
+			throw new Exception("Sorting during foreach loop is not allowed");
+		Array.Sort(
+			_aliveIdxs,
+			(idxA, idxB) => comp.Invoke(_pool[idxA], _pool[idxB])
+		);
 	}
 
 	//-----------------------------------------------------------
