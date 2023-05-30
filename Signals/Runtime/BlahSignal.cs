@@ -25,7 +25,7 @@ public class BlahSignal<T> : IBlahSignalPool where T : struct
 	private int         _delayedOpsCount;
 
 	private int   _iteratorsGoingCount;
-	private int[] _iteratorsIdxInAliveByToken;
+	private int[] _iteratorsIdxInAliveByLevel;
 
 	public BlahSignal(BlahSignalsConfig config, bool isOneFrame, bool isKeepOrder, bool isResettable)
 	{
@@ -37,7 +37,7 @@ public class BlahSignal<T> : IBlahSignalPool where T : struct
 		_releasedIdxs               = new int[_pool.Length];
 		_nextFrameIdxs              = new int[_pool.Length];
 		_delayedOps                 = new DelayedOp[config.DelayedOpsBaseCapacity];
-		_iteratorsIdxInAliveByToken = new int[1];
+		_iteratorsIdxInAliveByLevel = new int[1];
 	}
 
 	//-----------------------------------------------------------
@@ -96,7 +96,7 @@ public class BlahSignal<T> : IBlahSignalPool where T : struct
 			throw new Exception($"{nameof(DelCurrentInIteration)} only works in foreach loop");
 		if (_iteratorsGoingCount > 1)
 			throw new Exception($"Deleting in nested foreach loops is not supported yet");
-		AddDelayedOp(_iteratorsIdxInAliveByToken[0], false);
+		AddDelayedOp(_iteratorsIdxInAliveByLevel[0], false);
 	}
 
 	/// <summary>
@@ -133,6 +133,25 @@ public class BlahSignal<T> : IBlahSignalPool where T : struct
 		if (_aliveCount == 0)
 			throw new Exception("Signal is empty!");
 		return ref _pool[_aliveIdxs[0]];
+	}
+
+	/// <summary>
+	/// Returns ref to signal on which foreach iterator is now.
+	/// </summary>
+	/// <param name="nestingLevel">
+	/// For nesting foreach loops on the same signal,
+	/// specify from which loop you want to get ref (where 0 is first loop).
+	/// </param>
+	public ref T GetCurrentInIteration(int nestingLevel = 0)
+	{
+		if (_iteratorsGoingCount == 0)
+			throw new Exception($"{nameof(GetCurrentInIteration)} only works in foreach loop");
+		if (nestingLevel >= _iteratorsGoingCount)
+			throw new Exception($"Current max nesting level is {_iteratorsGoingCount}, " +
+			                    $"but {nestingLevel} is requested"
+			);
+
+		return ref _pool[_aliveIdxs[_iteratorsIdxInAliveByLevel[nestingLevel]]];
 	}
 
 	//-----------------------------------------------------------
@@ -250,19 +269,19 @@ public class BlahSignal<T> : IBlahSignalPool where T : struct
 	public readonly struct Enumerator : IDisposable
 	{
 		private readonly BlahSignal<T> _signal;
-		private readonly int           _token;
+		private readonly int           _level;
 
 		public Enumerator(BlahSignal<T> signal)
 		{
 			_signal = signal;
-			_signal.ValidateCapacity(ref _signal._iteratorsIdxInAliveByToken, _signal._iteratorsGoingCount);
-			_token                                      = _signal._iteratorsGoingCount++;
-			_signal._iteratorsIdxInAliveByToken[_token] = -1;
+			_signal.ValidateCapacity(ref _signal._iteratorsIdxInAliveByLevel, _signal._iteratorsGoingCount);
+			_level                                      = _signal._iteratorsGoingCount++;
+			_signal._iteratorsIdxInAliveByLevel[_level] = -1;
 		}
 
-		public ref T Current => ref _signal._pool[_signal._aliveIdxs[_signal._iteratorsIdxInAliveByToken[_token]]];
+		public ref T Current => ref _signal._pool[_signal._aliveIdxs[_signal._iteratorsIdxInAliveByLevel[_level]]];
 
-		public bool MoveNext() => ++_signal._iteratorsIdxInAliveByToken[_token] < _signal._aliveCount;
+		public bool MoveNext() => ++_signal._iteratorsIdxInAliveByLevel[_level] < _signal._aliveCount;
 
 		public void Dispose()
 		{
