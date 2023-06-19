@@ -165,21 +165,22 @@ public class BlahSignal<T> : IBlahSignalPool where T : struct
 	{
 		if (_isOneFrame)
 		{
-			_poolCount   = 0;
+			if (_nextFrameCount > 0)
+			{
+				for (var i = 0; i < _aliveCount; i++)
+					_releasedIdxs[_releasedCount++] = _aliveIdxs[i];
+			}
+			else
+			{
+				_poolCount     = 0;
+				_releasedCount = 0;
+			}
 			_aliveCount = 0;
-			_releasedCount  = 0;
 		}
 		if (_nextFrameCount > 0)
 		{
 			for (var i = 0; i < _nextFrameCount; i++)
-			{
-				int poolIdx = _nextFrameIdxs[i];
-				_aliveIdxs[_aliveCount++] = poolIdx;
-
-				for (var j = 0; j < _releasedCount; j++)
-					if (_releasedIdxs[j] == poolIdx)
-						_releasedIdxs[j] = _releasedIdxs[--_releasedCount];
-			}
+				_aliveIdxs[_aliveCount++] = _nextFrameIdxs[i];
 			_nextFrameCount = 0;
 		}
 	}

@@ -29,7 +29,7 @@ internal static class TestHelper
 		foreach (ref var ev in signal)
 		{
 			if (!values.Contains(ev.Val))
-				Assert.Fail();
+				Assert.Fail($"Value {ev.Val} is not expected");
 			values.Remove(ev.Val);
 			iterCount++;
 		}
