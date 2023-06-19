@@ -98,7 +98,7 @@ public class BlahSignal<T> : IBlahSignalPool where T : struct
 			throw new Exception($"{nameof(DelCurrentInIteration)} only works in foreach loop");
 		if (_iteratorsGoingCount > 1)
 			throw new Exception($"Deleting in nested foreach loops is not supported yet");
-		AddDelayedOp(_iteratorsIdxInAliveByLevel[0], false);
+		AddDelayedOp(_aliveIdxs[_iteratorsIdxInAliveByLevel[0]], false);
 	}
 
 	/// <summary>
@@ -204,7 +204,7 @@ public class BlahSignal<T> : IBlahSignalPool where T : struct
 	{
 		ValidateCapacity(ref _delayedOps, _delayedOpsCount);
 		ref var op = ref _delayedOps[_delayedOpsCount++];
-		op.IdxInPoolOrInAlive = idxInPoolOrInAlive;
+		op.IdxInPool = idxInPoolOrInAlive;
 		op.IsAdd              = isAdd;
 	}
 
@@ -212,45 +212,64 @@ public class BlahSignal<T> : IBlahSignalPool where T : struct
 	{
 		if (_isKeepOrder)
 		{
-			int emptyIdx = -1;
-			for (var i = 0; i < _delayedOpsCount; i++)
+			var isAnyDeleted = false;
+			for (var opIdx = 0; opIdx < _delayedOpsCount; opIdx++)
 			{
-				ref var op = ref _delayedOps[i];
+				ref var op = ref _delayedOps[opIdx];
 				if (op.IsAdd)
-					_aliveIdxs[_aliveCount++] = op.IdxInPoolOrInAlive;
+					_aliveIdxs[_aliveCount++] = op.IdxInPool;
 				else
 				{
-					_releasedIdxs[_releasedCount++]   = _aliveIdxs[op.IdxInPoolOrInAlive];
-					_aliveIdxs[op.IdxInPoolOrInAlive] = -1;
-					if (emptyIdx == -1 || op.IdxInPoolOrInAlive < emptyIdx)
-						emptyIdx = op.IdxInPoolOrInAlive;
+					for (var i = 0; i < _aliveCount; i++)
+						if (_aliveIdxs[i] == op.IdxInPool)
+						{
+							_releasedIdxs[_releasedCount++] = op.IdxInPool;
+							_aliveIdxs[i]                   = -1;
+							break;
+						}
+					isAnyDeleted = true;
 				}
 			}
-			if (emptyIdx != -1)
+			if (isAnyDeleted)
 			{
-				int tempAliveCount = _aliveCount;
-				for (int i = emptyIdx+1; i < tempAliveCount; i++)
-					if (_aliveIdxs[i] == -1)
-						_aliveCount--;
-					else
+				var isAnyLeft = false;
+				for (var i = 0; i < _aliveCount; i++)
+				{
+					if (_aliveIdxs[i] != -1)
+						continue;
+					isAnyLeft = false;
+					for (int j = i+1; j < _aliveCount; j++)
+						if (_aliveIdxs[j] != -1)
+						{
+							_aliveIdxs[i] = _aliveIdxs[j];
+							_aliveIdxs[j] = -1;
+							isAnyLeft     = true;
+							break;
+						}
+					if (!isAnyLeft)
 					{
-						_aliveIdxs[emptyIdx] = _aliveIdxs[i];
-						emptyIdx             = i;
+						_aliveCount = i;
+						break;
 					}
-				_aliveCount--;
+				}
 			}
 		}
 		else
 		{
-			for (var i = 0; i < _delayedOpsCount; i++)
+			for (var opIdx = 0; opIdx < _delayedOpsCount; opIdx++)
 			{
-				ref var op = ref _delayedOps[i];
+				ref var op = ref _delayedOps[opIdx];
 				if (op.IsAdd)
-					_aliveIdxs[_aliveCount++] = op.IdxInPoolOrInAlive;
+					_aliveIdxs[_aliveCount++] = op.IdxInPool;
 				else
 				{
-					_releasedIdxs[_releasedCount++]   = _aliveIdxs[op.IdxInPoolOrInAlive];
-					_aliveIdxs[op.IdxInPoolOrInAlive] = _aliveIdxs[--_aliveCount];
+					for (var i = 0; i < _aliveCount; i++)
+						if (_aliveIdxs[i] == op.IdxInPool)
+						{
+							_releasedIdxs[_releasedCount++] = _aliveIdxs[i];
+							_aliveIdxs[i]                   = _aliveIdxs[--_aliveCount];
+							break;
+						}
 				}
 			}
 		}
@@ -263,7 +282,7 @@ public class BlahSignal<T> : IBlahSignalPool where T : struct
 		/// If <see cref="IsAdd"/> true, it is index in <see cref="_pool"/>,
 		/// otherwise it is index in <see cref="_aliveIdxs"/> 
 		/// </summary>
-		public int  IdxInPoolOrInAlive;
+		public int  IdxInPool;
 		public bool IsAdd;
 	}
 
