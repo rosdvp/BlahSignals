@@ -26,9 +26,8 @@ public class BlahSignalsContext
 
 		bool isOneFrame   = type.GetInterface(nameof(IBlahNotOneFrame)) == null;
 		bool isKeepOrder  = type.GetInterface(nameof(IBlahKeepOrder)) != null;
-		bool isResettable = type.GetInterface(nameof(IBlahResettable)) != null;
 
-		var signal = new BlahSignal<T>(_config, isOneFrame, isKeepOrder, isResettable);
+		var signal = new BlahSignal<T>(_config, isOneFrame, isKeepOrder);
 		_all.Add(signal);
 		_map[type] = signal;
 
@@ -81,5 +80,6 @@ public interface IBlahKeepOrder { }
 /// Use with <see cref="IBlahSignal"/> only.
 /// Mark that data of structure should be set to default on each <see cref="BlahSignal{T}.Add"/> call.
 /// </summary>
+[Obsolete]
 public interface IBlahResettable { }
 }

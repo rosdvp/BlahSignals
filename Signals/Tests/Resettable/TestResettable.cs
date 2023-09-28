@@ -15,7 +15,7 @@ public class TestResettable
         public int Y;
     }
     
-    private struct ResettableSignal : IBlahSignal, IBlahResettable
+    private struct ResettableSignal : IBlahSignal
     {
         public int        IntVal;
         public string     StrVal;
