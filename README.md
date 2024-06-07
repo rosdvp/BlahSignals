@@ -18,7 +18,9 @@ The **key feature** of the framework is auto-generation of such Systems conveyor
 The adding or reading of signals happens via BlahSignal instances. There is always only one instance per each signal type which is shared between all users. This allows you to produce a signal in one class and consume it in another one.
 
 ### One-Frame
-By default, all signals are one-frame. This means, that all signal entries will be removed once you tell the framework that the frame is done.
+By default, all signals are one-frame. 
+This means, that all signal entries will be removed once you tell the framework that the frame is done.
+Whenever you add a new signal, struct's fields are set to default values.
 
 Generaly, One-Frame signals are used for:
 1) Events - tell other systems that something has happened in this frame.
@@ -28,9 +30,7 @@ In most cases you should prefer One-Frame signals to Not-One-Frame or Next-Frame
 
 ```csharp
 // By default, signals are one-frame.
-// Optionally, you can implement IBlahResettable interface to automatically
-// set all fields to default value once a new signal is added.
-public struct Event : IBlahResettable
+public struct Event
 {
     public int X;
     public int Y;
